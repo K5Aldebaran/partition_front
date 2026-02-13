@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -39,43 +38,7 @@ export default defineConfig({
     react(),
     // Если есть доверенные сертификаты (mkcert) — используем их.
     // Иначе fallback на self-signed (basic-ssl), чтобы HTTPS всё равно поднялся.
-    useHttps && httpsConfig === true ? basicSsl() : undefined,
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: [
-        'placeholder.svg',
-        'placeholder-partition.svg',
-        'placeholder-symptom.svg',
-        'partition-cart-icon.svg',
-        'draft-icon.svg',
-      ],
-      manifest: {
-        name: 'Partition Soundproofing',
-        short_name: 'Partition',
-        start_url: '.',
-        display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#0d6efd',
-        icons: [
-          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
-        runtimeCaching: [
-          {
-            urlPattern: /\/api\/partitions.*/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-partitions',
-              networkTimeoutSeconds: 5,
-              cacheableResponse: { statuses: [0, 200] }
-            }
-          }
-        ]
-      }
-    })
+    useHttps && httpsConfig === true ? basicSsl() : undefined
   ],
   server: {
     port: 5196,
